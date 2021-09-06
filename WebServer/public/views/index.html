@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<head>
+    <title>My Website</title>
+    <style>
+        *,
+        html {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: rgb(236, 152, 42);
+        }
+
+        .center {
+            width: 100%;
+            height: 50%;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 144px;
+        }
+
+        p {
+            font-size: 64px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center">
+        <h1>Formulario</h1>
+        <form id="form1" action="/request" method="POST">
+            <label for="ciclo">Ciclo Escolar:</label>
+            <input type="text" id="ciclo" name="ciclo"><br>
+            <div class="materia">
+                <label for="materia[0]">Materia 1</label>
+                <input type="text" id="materia[0]" name="materia[0]">
+            </div>
+            <input type="button" id="add" value="Add New"><br> 
+            <!-- <button onclick="addCourse()">Add</button> -->
+
+
+            <button type="submit">Get Schedule</button>
+
+            <ol id="list_item"></ol>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <!-- <script src="../scripts/addCourse.js"></script>
+            <script src="../scripts/removeCourse.js"></script> -->
+            <script>
+                $(document).ready(function(){
+                    $("#add").click(function(e){
+                        e.preventDefault();
+                        var numberOfmaterias = $("#form1").find("input[name^='materia']").length;
+                        var label = '<label for="[materia][' + numberOfmaterias + ']">materia ' + (numberOfmaterias + 1) + '</label> ';
+                        var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" />';
+                        var removeButton = '<button class="remove-materia">Remove</button>';
+                        var html = "<div class='materia'>" + label + input + removeButton + "</div>";
+                        $("#form1").find("#add").before(html);
+                    });
+                });
+
+                $(document).on("click", ".remove-materia",function(e){
+                    e.preventDefault();
+                    $(this).parents(".materia").remove();
+                    //update labels
+                    $("#form1").find("label[for^='materia']").each(function(){
+                        $(this).html("materia " + ($(this).parents('.materia').index() + 1));
+                    });
+                });
+            </script>
+          </form>
+    </div>
+</body>
+</html>
