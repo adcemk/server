@@ -22,17 +22,6 @@ app.use((req, res, next) => {
     next();
 });
 
-const ipc = require('node-ipc');
-
-ipc.config.id = 'a-unique-process-name2';
-ipc.config.retry = 1500;
-ipc.config.silent = true;
-ipc.connectTo('a-unique-process-name1', () => {
-  ipc.of['jest-observer'].on('connect', () => {
-    ipc.of['jest-observer'].emit('a-unique-message-name', "The message we send");
-  });
-});
-
 app.get('/ai', (req, res) => {
     
     console.log(req.params);
@@ -60,4 +49,30 @@ app.get('/ai', (req, res) => {
 
 app.listen(port, () => {
     console.log(`AI Server app listening on port ${port}!`)
+})
+
+app.ws('/ai', (ws, req) => {
+    ws.on('message', msg => {
+        var data = JSON.parse(msg)
+        if(data['type'] == 'first') {
+  
+            const python = spawn('python', ['script1.py', contentFileName, styleFileName, resultFileName, epochs, lr]);
+    
+            python.stdout.on('data', (data) => {
+                ws.send(JSON.stringify({
+                'type':'notres',
+                'body': data.toString()
+                }))
+            });
+    
+            python.on('close', (code) => {
+                console.log(`child process close all stdo with code ${code}`);
+                // var dataX = "data:image/"+data.ext+";base64," + Buffer.from(data).toString('base64')
+                // var json={ 'type':'res', 'img':dataX };
+                // ws.send(JSON.stringify(json))
+            });
+        }
+        else{
+        }
+    })
 })

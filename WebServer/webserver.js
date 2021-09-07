@@ -4,16 +4,6 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-const ipc = require('node-ipc');
-
-ipc.config.id = 'a-unique-process-name1';
-ipc.config.retry = 1500;
-ipc.config.silent = true;
-ipc.serve(() => ipc.server.on('a-unique-message-name', message => {
-  console.log(message);
-}));
-ipc.server.start();
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/views/index.html'));
 });
