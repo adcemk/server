@@ -27,9 +27,11 @@ app.get('/ai', (req, res) => {
     console.log(req.params);
     console.log(req.body);
 
-    var ciclo = req.body.ciclo;
-    var materias = req.body.materias;
+    // var ciclo = req.body.ciclo;
+    // var materias = req.body.materias;
     var dataToSend;
+    var ciclo = "damn";
+    var materias = "son";
   
     const python = spawn('python', ['ai_script.py', ciclo, materias]);
   
@@ -54,14 +56,16 @@ app.listen(port, () => {
 app.ws('/ai', (ws, req) => {
     ws.on('message', msg => {
         var data = JSON.parse(msg)
+        console.log(data.ciclo)
+        console.log(data.materias)
         if(data['type'] == 'first') {
   
-            const python = spawn('python', ['script1.py', contentFileName, styleFileName, resultFileName, epochs, lr]);
+            const python = spawn('python', ['ai_script.py', data.ciclo, data.materias]);
     
             python.stdout.on('data', (data) => {
                 ws.send(JSON.stringify({
-                'type':'notres',
-                'body': data.toString()
+                    'type':'notres',
+                    'body': data.toString()
                 }))
             });
     
