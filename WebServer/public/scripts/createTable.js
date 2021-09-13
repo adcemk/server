@@ -1,3 +1,4 @@
+let days = ['L', 'M', 'I', 'J', 'V', 'S']
 let hours = [
     '0700',
     '0755',
@@ -30,11 +31,41 @@ let hours = [
     '2100',
 ]
 
-var h = document.getElementById('headers');
+//create main table elements
+let table = document.createElement('table')
+let thead = document.createElement('thead')
+let tbody = document.createElement('tbody')
 
+table.appendChild(thead)
+table.appendChild(tbody)
+
+//append created table to body of document
+document.getElementById('body').appendChild(table)
+
+//create headers for table ()
+let headerRow = document.createElement('tr')
+let dayHead = document.createElement('th')
+dayHead.innerHTML = "Day"
+headerRow.appendChild(dayHead)
 hours.forEach((hour, index) => {
-    console.log(hour)
     let th = document.createElement('th')
-    th.textContent = hour
-    h.appendChild(th)
+    th.innerHTML = hour
+    headerRow.appendChild(th)
+})
+thead.appendChild(headerRow)
+
+//create empty rows with days
+days.forEach((day, index) => {
+    //create day row 
+    let dayRow = document.createElement('tr')
+    let dayName = document.createElement('td')
+    //add first td to day row (day name)
+    dayName.innerHTML = day
+    dayRow.appendChild(dayName)
+    //create rest of td elements (for now empty) and append to day row
+    hours.forEach((hours, index) => {
+        let th = document.createElement('td')
+        dayRow.appendChild(th)
+    })
+    tbody.appendChild(dayRow)
 })

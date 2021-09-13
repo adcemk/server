@@ -341,6 +341,7 @@ class Horario():
         data = {}
         data['id'] = self.id
         data['fitnes'] = self.fitness
+        clases_list = []
         clases_object = {}
         for clase in self.clases:
             clases_object['clave'] = clase.materia
@@ -349,7 +350,8 @@ class Horario():
             clases_object['dias'] = {}
             for dia in clase.dias:
                 clases_object['dias'][dia.dia] = {'horaI':dia.horaI, 'horaF':dia.horaF}
-        data['clases'] = clases_object
+            clases_list.append(clases_object)
+        data['clases'] = clases_list
         return data
 
 

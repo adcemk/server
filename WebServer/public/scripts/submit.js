@@ -6,9 +6,6 @@ var ciclo = ""
 var materias = []
 var json
 
-
-
-
 function transfer(e){
   //On receive info from socket (response)
   var socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
@@ -16,12 +13,16 @@ function transfer(e){
   socket = new WebSocket(echoSocketUrl);
   socket.onmessage = e => {
     var data = JSON.parse(e.data)
-    if(data['type'] == 'res') {
+    if(data['type'] == 'horario') {
       console.log(data)
-      socket.close()
     }
     else {
       console.log(data)
+      if(data['body'] == 'finished'){
+        socket.close()
+      } else {
+        //do something with the status info
+      }
     }   
   } 
 
