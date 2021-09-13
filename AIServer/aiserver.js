@@ -56,27 +56,31 @@ app.listen(port, () => {
 app.ws('/ai', (ws, req) => {
     ws.on('message', msg => {
         var data = JSON.parse(msg)
-        console.log(data.ciclo)
-        console.log(data.materias)
-        if(data['type'] == 'first') {
+        let schedules = []
+        if(data['type'] == 'request') {
   
             const python = spawn('python', ['ai_script.py', data.ciclo, data.materias]);
     
             python.stdout.on('data', (data) => {
-                ws.send(JSON.stringify({
-                    'type':'notres',
-                    'body': data.toString()
-                }))
+                msg = JSON.parse(data.toString())
+                if(msg['type'] == 'status'){
+                    ws.send(msg.toString())
+                }else{
+                    schedules.push(msg.toString())
+                }
             });
     
             python.on('close', (code) => {
                 console.log(`child process close all stdo with code ${code}`);
-                // var dataX = "data:image/"+data.ext+";base64," + Buffer.from(data).toString('base64')
-                // var json={ 'type':'res', 'img':dataX };
-                // ws.send(JSON.stringify(json))
+                //Send all schedules on child process close
+                schedules.forEach(schedule => {
+                    ws.send(schedule)
+                });
+                //Send finished flag on close?
             });
         }
-        else{
-        }
+    })
+    ws.on('close', msg => {
+        console.log('Closed connection')
     })
 })
