@@ -54,29 +54,30 @@ app.listen(port, () => {
 })
 
 app.ws('/ai', (ws, req) => {
+
+    console.log('new connection')
+
     ws.on('message', msg => {
-        var data = JSON.parse(msg)
-        let schedules = []
+        try{
+            var data = JSON.parse(msg)
+        }catch{console.log('error in', msg)}
+
         if(data['type'] == 'request') {
-  
-            const python = spawn('python', ['ai_script.py', data.ciclo, data.materias]);
-    
+            const python = spawn('python', ['gaCupos.py', data.ciclo, data.materias]);
+           
             python.stdout.on('data', (data) => {
-                msg = JSON.parse(data.toString())
-                if(msg['type'] == 'status'){
-                    ws.send(msg.toString())
-                }else{
-                    schedules.push(msg.toString())
-                }
+                try {
+                    var jsonData = JSON.parse(data.toString())
+                    if(jsonData['type'] == 'status'){
+                        ws.send(data.toString())
+                    }else if(jsonData['type'] == 'horario'){
+                        ws.send(jsonData)
+                    }
+                }catch{console.log('error in', data.toString())} 
             });
     
             python.on('close', (code) => {
                 console.log(`child process close all stdo with code ${code}`);
-                //Send all schedules on child process close
-                schedules.forEach(schedule => {
-                    ws.send(schedule)
-                });
-                //Send finished flag on close?
             });
         }
     })

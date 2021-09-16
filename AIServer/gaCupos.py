@@ -11,7 +11,7 @@ first_url = 'http://consulta.siiau.udg.mx/wco/sspseca.forma_consulta'
 target_url = 'http://consulta.siiau.udg.mx/wco/sspseca.consulta_oferta'
 
 _payload = {
-    'ciclop':sys.argv[3],
+    'ciclop':sys.argv[1],
     'cup':'D',
     'crsep':None, # Clave de la materia
     'majrp':None,
@@ -24,8 +24,12 @@ _payload = {
     'mostrarp':2000
 }
 
-materias = sys.argv[1].split(',')
+materias = sys.argv[2].split(',')
 #generaciones = int(sys.argv[2])
+
+sys.stdout.flush() 
+print(materias)
+
 generaciones = 100
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
@@ -338,20 +342,29 @@ class Horario():
         return string
 
     def getJSON(self):
+
         data = {}
         data['id'] = self.id
         data['fitnes'] = self.fitness
         clases_list = []
-        clases_object = {}
+
         for clase in self.clases:
-            clases_object['clave'] = clase.materia
-            clases_object['profe'] = clase.profe
-            clases_object['nrc'] = clase.nrc
-            clases_object['dias'] = {}
+            class_obj = {
+                'clave':clase.materia,
+                'profe':clase.profe,
+                'nrc':clase.nrc,
+                'dias':[]
+                }  
+
+            dias_obj = []          
             for dia in clase.dias:
-                clases_object['dias'][dia.dia] = {'horaI':dia.horaI, 'horaF':dia.horaF}
-            clases_list.append(clases_object)
+                dias_obj.append({'horaI':dia.horaI, 'horaF':dia.horaF})
+            class_obj['dias'] = dias_obj
+
+            clases_list.append(class_obj)
+
         data['clases'] = clases_list
+
         return data
 
 
