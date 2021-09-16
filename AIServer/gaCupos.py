@@ -4,6 +4,7 @@ import copy
 import numpy as np
 import sys
 import json
+import time
 from bs4 import BeautifulSoup
 
 
@@ -11,7 +12,8 @@ first_url = 'http://consulta.siiau.udg.mx/wco/sspseca.forma_consulta'
 target_url = 'http://consulta.siiau.udg.mx/wco/sspseca.consulta_oferta'
 
 _payload = {
-    'ciclop':sys.argv[1],
+    #'ciclop':sys.argv[1],
+    'ciclop':202110,
     'cup':'D',
     'crsep':None, # Clave de la materia
     'majrp':None,
@@ -24,11 +26,9 @@ _payload = {
     'mostrarp':2000
 }
 
-materias = sys.argv[2].split(',')
+#materias = sys.argv[2].split(',')
+materias = ['I5884', 'I7023', 'I5890', 'I7036']
 #generaciones = int(sys.argv[2])
-
-sys.stdout.flush() 
-print(materias)
 
 generaciones = 100
 
@@ -344,26 +344,26 @@ class Horario():
     def getJSON(self):
 
         data = {}
-        data['id'] = self.id
-        data['fitnes'] = self.fitness
+        data["id"] = self.id
+        data["fitnes"] = self.fitness
         clases_list = []
 
         for clase in self.clases:
             class_obj = {
-                'clave':clase.materia,
+                "clave":clase.materia,
                 'profe':clase.profe,
-                'nrc':clase.nrc,
-                'dias':[]
+                "nrc":clase.nrc,
+                "dias":[]
                 }  
 
             dias_obj = []          
             for dia in clase.dias:
-                dias_obj.append({'horaI':dia.horaI, 'horaF':dia.horaF})
-            class_obj['dias'] = dias_obj
+                dias_obj.append({'dia':dia.dia,'horaI':dia.horaI, 'horaF':dia.horaF})
+            class_obj["dias"] = dias_obj
 
             clases_list.append(class_obj)
 
-        data['clases'] = clases_list
+        data["clases"] = clases_list
 
         return data
 
@@ -494,9 +494,6 @@ for i in range(1):
 poblacion = len(particulas)
 ng = particulas
 
-sys.stdout.flush() 
-print(poblacion)
-
 # Algoritmo genetico
 for i in range(generaciones):
     
@@ -508,12 +505,10 @@ for i in range(generaciones):
             counter += 1
    
     msg = {'type':'status','body':i+1}
-
     sys.stdout.flush() 
-    print(json.dumps(msg))
+    print(json.dumps(msg))   
+    sys.stdout.flush()
     #print(i)
-        
-    
     for j in range(0, poblacion, 2):
         
         if (len(ng) == 0):
@@ -583,23 +578,31 @@ buenos = buenos[::-1]
 # Devolver un arreglo de cadenas
 
 
-if (len(buenos) < 300):
-    for i in range(len(buenos)):
-        #f.write(h.showString())     
-        #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
-        msg = {'type':'horario','body':buenos[i].getJSON(),'key':i}
-        sys.stdout.flush() 
-        print(json.dumps(msg))
+for i in range(len(buenos)):
+    #f.write(h.showString())     
+    #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
+    msg = {'type':'horario','body':buenos[i].getJSON(),'key':i} 
+    sys.stdout.flush() 
+    print(json.dumps(msg))
+    sys.stdout.flush()
+    time.sleep(0.05)
+ 
+
 #f.close()
+"""
 else:
     for i in range(300):
         #f.write(h.showString())     
         #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
         msg = {'type':'horario','body':buenos[i].getJSON(),'key':i}
-        sys.stdout.flush() 
-        print(json.dumps(msg))  
+        print(msg)
+        sys.stdout.flush()
+"""
+
+
+  
 
 msg = {'type':'status','body':'finished'}
-sys.stdout.flush() 
 print(json.dumps(msg))
+sys.stdout.flush() 
 

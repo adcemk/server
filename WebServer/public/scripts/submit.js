@@ -14,12 +14,11 @@ function transfer(e){
   socket = new WebSocket(echoSocketUrl);
 
   socket.onmessage = function (event) {
+    var data = {}
     try {
-      var data = JSON.parse(event.data)
-    }catch{}
+      data = JSON.parse(event.data)
+    }catch{console.log(event.data)}
     
-    console.log(data)
-
     if(data['type'] == 'horario') {
       // do something with the schedules
       //i.e.
@@ -44,6 +43,7 @@ function transfer(e){
         //do something with the status info
       }
     }   
+    
   } 
 
 

@@ -66,14 +66,7 @@ app.ws('/ai', (ws, req) => {
             const python = spawn('python', ['gaCupos.py', data.ciclo, data.materias]);
            
             python.stdout.on('data', (data) => {
-                try {
-                    var jsonData = JSON.parse(data.toString())
-                    if(jsonData['type'] == 'status'){
-                        ws.send(data.toString())
-                    }else if(jsonData['type'] == 'horario'){
-                        ws.send(jsonData)
-                    }
-                }catch{console.log('error in', data.toString())} 
+                ws.send(data.toString())
             });
     
             python.on('close', (code) => {
