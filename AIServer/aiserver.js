@@ -59,7 +59,7 @@ app.ws('/ai', (ws, req) => {
         let schedules = []
         if(data['type'] == 'request') {
   
-            const python = spawn('python', ['ai_script.py', data.ciclo, data.materias]);
+            const python = spawn('python', ['gaCupos.py', data.ciclo, data.materias]);
     
             python.stdout.on('data', (data) => {
                 msg = JSON.parse(data.toString())

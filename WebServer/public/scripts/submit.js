@@ -5,6 +5,7 @@ sendButton.addEventListener('click', transfer);
 var ciclo = ""
 var materias = []
 var json
+var schedules = []
 
 function transfer(e){
   //On receive info from socket (response)
@@ -14,6 +15,7 @@ function transfer(e){
   socket.onmessage = e => {
     var data = JSON.parse(e.data)
     if(data['type'] == 'horario') {
+      schedules.push(data)
       // do something with the schedules
       //i.e.
       //insert all of the objects into a list
