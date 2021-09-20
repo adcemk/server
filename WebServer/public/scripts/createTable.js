@@ -36,55 +36,71 @@ horasMap = ['0700','0800','0900','1000','1100',
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)
-var indexHor = 0
-console.log('in tables.html')
-console.log(horarios[0])
-console.log(horarios[indexHor].body.clases)
+//var indexHor = 0
+//console.log('in tables.html')
+//console.log(horarios[0])
+//console.log(horarios[indexHor].body.clases)
 
-//create main table elements
-let table = document.createElement('table')
-let thead = document.createElement('thead')
-let tbody = document.createElement('tbody')
+horarios.forEach((horario, indexHor) => {
 
-table.appendChild(thead)
-table.appendChild(tbody)
+    console.log(horarios[indexHor].body.clases)
 
-//append created table to body of document
-document.getElementById('body').appendChild(table)
+    //create main table elements
+    let div = document.createElement('div')
+    let table = document.createElement('table')
+    let thead = document.createElement('thead')
+    let tbody = document.createElement('tbody')
+    let tfoot = document.createElement('tfoot')
 
-//create headers for table ()
-let headerRow = document.createElement('tr')
-let dayHead = document.createElement('th')
-dayHead.innerHTML = "Day"
-headerRow.appendChild(dayHead)
-hours.forEach((hour, index) => {
-    let th = document.createElement('th')
-    th.innerHTML = hour
-    headerRow.appendChild(th)
-})
-thead.appendChild(headerRow)
+    table.appendChild(thead)
+    table.appendChild(tbody)
+    table.appendChild(tfoot)
 
-//create empty rows with days
-days.forEach((day, indexD) => {
-    //create day row 
-    let dayRow = document.createElement('tr')
-    let dayName = document.createElement('td')
-    //add first td to day row (day name)
-    dayName.innerHTML = day
-    dayRow.appendChild(dayName)
-    //create rest of td elements (for now empty) and append to day row
-    hours.forEach((hours, indexH) => {
-        let th = document.createElement('td')
-        horarios[indexHor].body.clases.forEach((clase) => {
-            clase.dias.forEach((dia) => {
-                if(indexD == dia.dia){
-                    if(indexH >= (dia.horaI * 2) && indexH <= (dia.horaF * 2 - 1)){
-                        th.innerHTML = 'X'
-                    }
-                }
-            })
-        })
-        dayRow.appendChild(th)
+    div.appendChild(table)
+
+    //append created table to body of document
+    document.getElementById('body').appendChild(div)
+
+    //create headers for table ()
+    let headerRow = document.createElement('tr')
+    let dayHead = document.createElement('th')
+    dayHead.innerHTML = "Day"
+    headerRow.appendChild(dayHead)
+    hours.forEach((hour, index) => {
+        let th = document.createElement('th')
+        th.innerHTML = hour
+        headerRow.appendChild(th)
     })
-    tbody.appendChild(dayRow)
+    thead.appendChild(headerRow)
+
+    //create body rows with marks where classes should be
+    days.forEach((day, indexD) => {
+        //create day row 
+        let dayRow = document.createElement('tr')
+        let dayName = document.createElement('td')
+        //add first td to day row (day name)
+        dayName.innerHTML = day
+        dayRow.appendChild(dayName)
+        //create rest of td elements (for now empty) and append to day row
+        hours.forEach((hours, indexH) => {
+            let th = document.createElement('td')
+            horarios[indexHor].body.clases.forEach((clase) => {
+                clase.dias.forEach((dia) => {
+                    if(indexD == dia.dia){
+                        if(indexH >= (dia.horaI * 2) && indexH <= (dia.horaF * 2 - 1)){
+                            th.innerHTML = 'X'
+                        }
+                    }
+                })
+            })
+            dayRow.appendChild(th)
+        })
+        tbody.appendChild(dayRow)
+    })
+
+    //create table footer where
+    horario.body.clases.forEach((clase, indexC) => {
+        //infoRow will have something like colorType, NRC, className, teacherName
+        let infoRow = document.createElement('tr')
+    })
 })
