@@ -54,29 +54,27 @@ app.listen(port, () => {
 })
 
 app.ws('/ai', (ws, req) => {
+
+    console.log('new connection')
+
     ws.on('message', msg => {
-        var data = JSON.parse(msg)
-        console.log(data.ciclo)
-        console.log(data.materias)
-        if(data['type'] == 'first') {
-  
-            const python = spawn('python', ['ai_script.py', data.ciclo, data.materias]);
-    
+        try{
+            var data = JSON.parse(msg)
+        }catch{console.log('error in', msg)}
+
+        if(data['type'] == 'request') {
+            const python = spawn('python', ['gaCupos.py', data.ciclo, data.materias]);
+           
             python.stdout.on('data', (data) => {
-                ws.send(JSON.stringify({
-                    'type':'notres',
-                    'body': data.toString()
-                }))
+                ws.send(data.toString())
             });
     
             python.on('close', (code) => {
                 console.log(`child process close all stdo with code ${code}`);
-                // var dataX = "data:image/"+data.ext+";base64," + Buffer.from(data).toString('base64')
-                // var json={ 'type':'res', 'img':dataX };
-                // ws.send(JSON.stringify(json))
             });
         }
-        else{
-        }
+    })
+    ws.on('close', msg => {
+        console.log('Closed connection')
     })
 })
