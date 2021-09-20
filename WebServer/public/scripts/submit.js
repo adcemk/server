@@ -2,17 +2,20 @@ var sendButton = document.getElementById('sendButton');
 
 sendButton.addEventListener('click', transfer);
 
+const tableURL = window.location.protocol + '//' + 'localhost:3000/table'
 var ciclo = ""
 var materias = []
+var materiasSend = []
 var json
 var socketGlobal
 
 function transfer(e){
-  //On receive info from socket (response)
+  //Websocket creation 
   var socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
   var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
   socket = new WebSocket(echoSocketUrl);
 
+  //On receive info from socket (response)
   socket.onmessage = function (event) {
     var data = {}
     try {
@@ -20,30 +23,21 @@ function transfer(e){
     }catch{console.log(event.data)}
     
     if(data['type'] == 'horario') {
-      // do something with the schedules
-      //i.e.
-      //insert all of the objects into a list
-      //redirect with window.location to table.html with list as a parameter
-      //or (probably better just create json string of list and use sessionStorage to retrieve in other html)
+      materiasSend.push(data)
       console.log('horario', data)
     }
     else if(data['type'] == 'status') {
-      // do something with the schedules
-      //i.e.
-      //insert all of the objects into a list
-      //redirect with window.location to table.html with list as a parameter
-      //or (probably better just create json string of list and use sessionStorage to retrieve in other html)
       console.log('status', data)
-    }
-    else {
-      console.log(data)
+      //Finished
       if(data['body'] == 'finished'){
         socket.close()
-      } else {
-        //do something with the status info
+        console.log('entered finished flag')
+        sessionStorage.setItem('horarios', JSON.stringify(materiasSend))
+        window.location.replace(tableURL)
       }
-    }   
-    
+      //Generation Info
+      else{}
+    }  
   } 
 
 

@@ -30,6 +30,16 @@ let hours = [
     '2055',
     '2100',
 ]
+horasMap = ['0700','0800','0900','1000','1100',
+            '1200','1300','1400','1500','1600',
+            '1700','1800','1900','2000','2100'] 
+
+var horariosString = sessionStorage.getItem('horarios')
+var horarios = JSON.parse(horariosString)
+var indexHor = 0
+console.log('in tables.html')
+console.log(horarios[0])
+console.log(horarios[indexHor].body.clases)
 
 //create main table elements
 let table = document.createElement('table')
@@ -55,7 +65,7 @@ hours.forEach((hour, index) => {
 thead.appendChild(headerRow)
 
 //create empty rows with days
-days.forEach((day, index) => {
+days.forEach((day, indexD) => {
     //create day row 
     let dayRow = document.createElement('tr')
     let dayName = document.createElement('td')
@@ -63,8 +73,17 @@ days.forEach((day, index) => {
     dayName.innerHTML = day
     dayRow.appendChild(dayName)
     //create rest of td elements (for now empty) and append to day row
-    hours.forEach((hours, index) => {
+    hours.forEach((hours, indexH) => {
         let th = document.createElement('td')
+        horarios[indexHor].body.clases.forEach((clase) => {
+            clase.dias.forEach((dia) => {
+                if(indexD == dia.dia){
+                    if(indexH >= (dia.horaI * 2) && indexH <= (dia.horaF * 2 - 1)){
+                        th.innerHTML = 'X'
+                    }
+                }
+            })
+        })
         dayRow.appendChild(th)
     })
     tbody.appendChild(dayRow)
