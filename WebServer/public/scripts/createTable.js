@@ -30,9 +30,10 @@ let hours = [
     '2055',
     '2100',
 ]
-horasMap = ['0700','0800','0900','1000','1100',
-            '1200','1300','1400','1500','1600',
-            '1700','1800','1900','2000','2100'] 
+let info = ['Color', 'NRC', 'Class', 'Teacher'] 
+
+//  colors = [ P. Blue ,  B. Blue ,  Yellow  ,  Red     ,  Purple]
+let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)
@@ -45,18 +46,17 @@ horarios.forEach((horario, indexHor) => {
 
     console.log(horarios[indexHor].body.clases)
 
-    //create main table elements
     let div = document.createElement('div')
-    let table = document.createElement('table')
+
+    //create main table elements
+    let tableSched = document.createElement('table')
     let thead = document.createElement('thead')
     let tbody = document.createElement('tbody')
-    let tfoot = document.createElement('tfoot')
 
-    table.appendChild(thead)
-    table.appendChild(tbody)
-    table.appendChild(tfoot)
+    tableSched.appendChild(thead)
+    tableSched.appendChild(tbody)
 
-    div.appendChild(table)
+    div.appendChild(tableSched)
 
     //append created table to body of document
     document.getElementById('body').appendChild(div)
@@ -84,11 +84,11 @@ horarios.forEach((horario, indexHor) => {
         //create rest of td elements (for now empty) and append to day row
         hours.forEach((hours, indexH) => {
             let th = document.createElement('td')
-            horarios[indexHor].body.clases.forEach((clase) => {
+            horarios[indexHor].body.clases.forEach((clase, indexC) => {
                 clase.dias.forEach((dia) => {
                     if(indexD == dia.dia){
                         if(indexH >= (dia.horaI * 2) && indexH <= (dia.horaF * 2 - 1)){
-                            th.innerHTML = 'X'
+                            th.style.background = colors[indexC]
                         }
                     }
                 })
@@ -98,9 +98,41 @@ horarios.forEach((horario, indexHor) => {
         tbody.appendChild(dayRow)
     })
 
-    //create table footer where
+    //header for table info
+    let tableInfo = document.createElement('table')
+    let infoHead = document.createElement('thead')
+    let infoBody = document.createElement('tbody')
+
+    tableInfo.appendChild(infoHead)
+    tableInfo.appendChild(infoBody)
+
+    div.appendChild(tableInfo)
+
+    info.forEach((i) =>{
+        let th = document.createElement('th')
+        th.innerHTML = i
+        infoHead.appendChild(th)
+    })
+
     horario.body.clases.forEach((clase, indexC) => {
-        //infoRow will have something like colorType, NRC, className, teacherName
         let infoRow = document.createElement('tr')
+
+        let infoColor = document.createElement('td')
+        let infoNRC = document.createElement('td')
+        let infoClass = document.createElement('td')
+        let infoTeach = document.createElement('td')
+
+        infoRow.appendChild(infoColor)
+        infoRow.appendChild(infoNRC)
+        infoRow.appendChild(infoClass)
+        infoRow.appendChild(infoTeach)
+
+        //infoColor.innerHTML = 'color_placeholder'
+        infoColor.style.background = colors[indexC]
+        infoNRC.innerHTML = clase.nrc
+        infoClass.innerHTML = clase.clave
+        infoTeach.innerHTML = clase.profe
+
+        infoBody.appendChild(infoRow)
     })
 })
