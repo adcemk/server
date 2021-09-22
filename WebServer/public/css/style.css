@@ -1,0 +1,11 @@
+table {
+    border-collapse: separate; /* separated is default */
+}
+
+th, td {
+    border: 1px solid black;
+}
+
+thead th{
+    width: 25%;
+}

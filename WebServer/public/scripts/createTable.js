@@ -33,14 +33,11 @@ let hours = [
 let info = ['Color', 'NRC', 'Class', 'Teacher'] 
 
 //  colors = [ P. Blue ,  B. Blue ,  Yellow  ,  Red     ,  Purple]
-let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
+// let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
+let colors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)
-//var indexHor = 0
-//console.log('in tables.html')
-//console.log(horarios[0])
-//console.log(horarios[indexHor].body.clases)
 
 horarios.forEach((horario, indexHor) => {
 
