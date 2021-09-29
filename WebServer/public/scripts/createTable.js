@@ -30,33 +30,38 @@ let hours = [
     '2055',
     '2100',
 ]
-let info = ['Color', 'NRC', 'Class', 'Teacher'] 
+let info = ['Color', 'NRC', 'Code', 'Class', 'Teacher'] 
 
 //  colors = [ P. Blue ,  B. Blue ,  Yellow  ,  Red     ,  Purple]
-let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
+// let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
+let colors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)
-//var indexHor = 0
-//console.log('in tables.html')
-//console.log(horarios[0])
-//console.log(horarios[indexHor].body.clases)
 
 horarios.forEach((horario, indexHor) => {
 
     console.log(horarios[indexHor].body.clases)
 
     let div = document.createElement('div')
+    let divSched = document.createElement('div');
 
     //create main table elements
+    let caption = document.createElement('caption')
     let tableSched = document.createElement('table')
     let thead = document.createElement('thead')
     let tbody = document.createElement('tbody')
 
+    caption.innerHTML = "Horario #" + (indexHor+1)
+
+    tableSched.appendChild(caption)
     tableSched.appendChild(thead)
     tableSched.appendChild(tbody)
 
-    div.appendChild(tableSched)
+    divSched.appendChild(tableSched)
+    divSched.style.overflowX = "auto"
+
+    div.appendChild(divSched)
 
     //append created table to body of document
     document.getElementById('body').appendChild(div)
@@ -64,7 +69,7 @@ horarios.forEach((horario, indexHor) => {
     //create headers for table ()
     let headerRow = document.createElement('tr')
     let dayHead = document.createElement('th')
-    dayHead.innerHTML = "Day"
+    //dayHead.innerHTML = "Day"
     headerRow.appendChild(dayHead)
     hours.forEach((hour, index) => {
         let th = document.createElement('th')
@@ -77,23 +82,23 @@ horarios.forEach((horario, indexHor) => {
     days.forEach((day, indexD) => {
         //create day row 
         let dayRow = document.createElement('tr')
-        let dayName = document.createElement('td')
+        let dayName = document.createElement('th')
         //add first td to day row (day name)
         dayName.innerHTML = day
         dayRow.appendChild(dayName)
         //create rest of td elements (for now empty) and append to day row
         hours.forEach((hours, indexH) => {
-            let th = document.createElement('td')
+            let td = document.createElement('td')
             horarios[indexHor].body.clases.forEach((clase, indexC) => {
                 clase.dias.forEach((dia) => {
                     if(indexD == dia.dia){
                         if(indexH >= (dia.horaI * 2) && indexH <= (dia.horaF * 2 - 1)){
-                            th.style.background = colors[indexC]
+                            td.style.background = colors[indexC]
                         }
                     }
                 })
             })
-            dayRow.appendChild(th)
+            dayRow.appendChild(td)
         })
         tbody.appendChild(dayRow)
     })
@@ -119,18 +124,21 @@ horarios.forEach((horario, indexHor) => {
 
         let infoColor = document.createElement('td')
         let infoNRC = document.createElement('td')
+        let infoCode = document.createElement('td')
         let infoClass = document.createElement('td')
         let infoTeach = document.createElement('td')
 
         infoRow.appendChild(infoColor)
         infoRow.appendChild(infoNRC)
+        infoRow.appendChild(infoCode)
         infoRow.appendChild(infoClass)
         infoRow.appendChild(infoTeach)
 
         //infoColor.innerHTML = 'color_placeholder'
         infoColor.style.background = colors[indexC]
         infoNRC.innerHTML = clase.nrc
-        infoClass.innerHTML = clase.clave
+        infoCode.innerHTML = clase.clave
+        infoClass.innerHTML = clase.materia
         infoTeach.innerHTML = clase.profe
 
         infoBody.appendChild(infoRow)

@@ -351,6 +351,7 @@ class Horario():
         for clase in self.clases:
             class_obj = {
                 "clave":clase.materia,
+                "materia":clase.materiaName,
                 'profe':clase.profe,
                 "nrc":clase.nrc,
                 "dias":[]
