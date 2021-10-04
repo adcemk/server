@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
-    <style>
+    <!-- <style>
         *,
         html {
             margin: 0;
@@ -42,7 +43,8 @@
         p {
             font-size: 64px;
         }
-    </style>
+    </style> -->
+    <link href="../css/style.css" rel="stylesheet" media="all" />
 </head>
 
 <body>
@@ -57,7 +59,7 @@
             </div>
             <input type="button" id="add" value="Add New"><br> 
             <!-- <button onclick="addCourse()">Add</button> -->
-            <button type="button" id="sendButton">Get Schedules Bruh</button>
+            <button type="button" id="sendButton">Get Schedules</button>
             <!-- <button type="submit" id="sendButton">Get Schedules</button> -->
 
             <ol id="list_item"></ol>
@@ -71,7 +73,7 @@
                     $("#add").click(function(e){
                         e.preventDefault();
                         var numberOfmaterias = $("#form1").find("input[name^='materia']").length;
-                        var label = '<label for="[materia][' + numberOfmaterias + ']">materia ' + (numberOfmaterias + 1) + '</label> ';
+                        var label = '<label for="[materia][' + numberOfmaterias + ']">Materia ' + (numberOfmaterias + 1) + '</label> ';
                         var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" class="arrayTest"/>';
                         var removeButton = '<button class="remove-materia">Remove</button>';
                         var html = "<div class='materia'>" + label + input + removeButton + "</div>";
@@ -84,7 +86,7 @@
                     $(this).parents(".materia").remove();
                     //update labels
                     $("#form1").find("label[for^='materia']").each(function(){
-                        $(this).html("materia " + ($(this).parents('.materia').index() + 1));
+                        $(this).html("Materia " + ($(this).parents('.materia').index() + 1));
                     });
                 });
             </script>

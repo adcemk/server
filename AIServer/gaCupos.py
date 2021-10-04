@@ -275,7 +275,18 @@ class Horario():
 
         
         self.fitness -= (len(materias) - len(self.clases)) * (40) # Castigo que falten materias
-            
+
+
+        #
+        hI = 100
+        hF = 0
+        for clase in self.clases:
+            for dia in clase.dias:
+                if(hI > dia.horaF):
+                    hI = dia.horaI
+                if(hF < dia.horaF):
+                    hF = dia.horaF
+        self.fitness -= (hF-hI)    
 
         # Variable que mide que tan alejadas estan las materias entre si
         for i in range(0, len(self.clases_sinColition)-1):

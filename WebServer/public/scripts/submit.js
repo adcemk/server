@@ -57,6 +57,8 @@ function transfer(e){
         "materias":materias
     };
 
+    console.log(json)
+
     socket.send(JSON.stringify(json))
   }
 

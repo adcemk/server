@@ -7,6 +7,12 @@ div {
     margin-bottom: 20px;
 }
 
+div.materia {
+    align-items: left;
+}
+
+/* This is the Table CSS */
+
 table {
     border-collapse: separate; /* separated is default */
     border: 5px solid black;
@@ -52,4 +58,31 @@ tbody th {
 
 tbody tr:nth-child(even) th {
     background-color: #333;
+}
+
+/* This is the Button CSS */
+
+button, input[type=button] {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+}
+
+button:hover, input[type=button]:hover {
+    background-color: #3e8e41;
+}
+
+button:active, input[type=button]:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }
