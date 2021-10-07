@@ -64,8 +64,8 @@ tbody tr:nth-child(even) th {
 
 button, input[type=button] {
     display: inline-block;
-    padding: 15px 25px;
-    font-size: 24px;
+    padding: 10px 20px;
+    font-size: 15px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -74,7 +74,8 @@ button, input[type=button] {
     background-color: #4CAF50;
     border: none;
     border-radius: 15px;
-    box-shadow: 0 9px #999;
+    box-shadow: 0 3px #999;
+    margin: 5px;
 }
 
 button:hover, input[type=button]:hover {
@@ -85,4 +86,10 @@ button:active, input[type=button]:active {
     background-color: #3e8e41;
     box-shadow: 0 5px #666;
     transform: translateY(4px);
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
 }
