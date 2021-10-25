@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <link href="../css/style.css" rel="stylesheet" media="all" />
+</head>
+
+<body id="body">
+    <div class="header">
+        <h1>Instrucciones</h1>
+        <div class="flex-container">
+            <div class="headerItem">
+                <span id="formulario">Formulario</span>
+            </div>
+            <div class="headerItem">
+                <span id="instrucciones">Instrucciones</span>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="container">
+        <h2 class="subtitle2">Paso 1</h2>
+        <p>
+            Revisa tu malla curricular y obten el <strong class="strongIns">código/clave</strong> de la materia que desees agendar. Se ha circulado de color rojo para marcar
+            su ubicación. En caso de no tener disponible tu malla curricular, la información también es disponible en el sistema SIIAU bajo Registro -> Proyección.
+        </p>
+        <img class="resize nonsquare" src="../images/malla.jpg" alt="Malla Curricular">
+        <h2 class="subtitle2">Paso 2</h2>
+        <p>
+            Ya que tengas listo el listado de claves de las materias que desees agendar, deberás ingresar cada clave a un campo de <strong>Materia</strong> que se encuentra
+            en el apartado de <strong>Formulario</strong> dentro de este sitio. Para ingresar el valor de <strong>Ciclo</strong> ingresa el año actual y tu ciclo. Asegurate 
+            de usar el formato <strong>10</strong> o <strong>20</strong> en lugar de A o B, respectivamente. Por ejemplo, si tu ciclo es 2021A entonces ingresa <strong>202110</strong>.
+            Una vez llenado el formulario, presione el botón <strong>Get Schedule</strong> para generar sus horarios.
+        </p>
+        <img class="resize2" src="../images/form.png" alt="Formulario">
+        <h2 class="subtitle2">Paso 3</h2>
+        <p>
+            Se le mostrarán varios horarios generados. Cada uno de estos horarios tendrá una tabla de información en la cual se podrá apreciar el nombre de la materia, el 
+            profesor que imparte la clase, la clave de la materia el color que representa en la tabla del horario y el <strong>NRC</strong> de la clase. Revisa todos los horarios
+            generados y elige el que más te agrade.
+        </p>
+        <img class="resize2" src="../images/horario.png" alt="Malla Curricular">
+        <h2 class="subtitle2">Paso 4</h2>
+        <p>
+            Dentro de SIIAU Registro->Registro sólo copia los <strong>NRC</strong> del horario que más te agradó a los campos disponibles y presiona el botón de aceptar.
+        </p>
+    </div>
+    <script src="../scripts/redirect.js"></script>
+</body>

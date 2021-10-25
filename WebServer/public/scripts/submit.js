@@ -10,10 +10,65 @@ var json
 var socketGlobal
 
 function transfer(e){
+  // Check for empty inputs
+  var flag = false;
+
+  if(!document.getElementById("ciclo").value){
+    var alert = document.getElementById('alertCiclo')
+    if(alert === null){
+      var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
+      var message = 'Ingresa un ciclo.';
+      var alert = '<div class="alert" id="alertCiclo">' + span + message + '</div>';
+      $("#form1").find("#sendButton").after(alert);
+    }
+    else {
+      alert.style.display = "block";
+    }
+    flag=true;
+  }
+
+  let checkEmptyClass = document.getElementsByClassName("arrayClass")
+  for (let index = 0; index < checkEmptyClass.length; index++) {
+    if(!checkEmptyClass[index].value){
+      var alert = document.getElementById('alertClass')
+      if(alert === null){
+        var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
+        var message = 'Debes llenar todos los campos de <strong>Materia</strong>.';
+        var alert = '<div class="alert" id="alertClass">' + span + message + '</div>';
+        $("#form1").find("#sendButton").after(alert);
+      }
+      else {
+        alert.style.display = "block";
+      }
+      flag=true;
+    }
+  }
+
+  if(flag === true){return}
+
   //Websocket creation 
   var socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
   var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
   socket = new WebSocket(echoSocketUrl);
+  //Delete add, delete and send buttons
+  let send = document.getElementById("sendButton")
+  let add = document.getElementById("add")
+  send.remove()
+  add.remove()
+  let removes = document.getElementsByClassName("remove-materia")
+  let len = removes.length
+  for (var i=0; i<len; i=i+1) {
+    removes[0].remove()
+  }
+  //creates div to show percentage of schedule generations completion
+  let div = document.createElement("div")
+  let title = document.createElement("h2")
+  let percent = document.createElement("h3")
+  div.classList.add("percentage")
+  title.innerHTML = "Generación de Horarios:"
+  div.appendChild(title)
+  div.appendChild(percent)
+  document.getElementById('container').appendChild(div)
 
   //On receive info from socket (response)
   socket.onmessage = function (event) {
@@ -36,7 +91,9 @@ function transfer(e){
         window.location.replace(tableURL)
       }
       //Generation Info
-      else{}
+      else{
+        percent.innerHTML = data['body'] + "%"
+      }
     }  
   } 
 
@@ -44,7 +101,7 @@ function transfer(e){
   socket.onopen = e => {
     //On send info to AI Server
     ciclo = document.getElementById("ciclo").value
-    elements = document.getElementsByClassName("arrayTest")
+    elements = document.getElementsByClassName("arrayClass")
     for (let index = 0; index < elements.length; index++) {
       //console.log(elements[index].value)
       materias.push(elements[index].value)

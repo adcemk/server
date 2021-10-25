@@ -34,7 +34,8 @@ let info = ['Color', 'NRC', 'Code', 'Class', 'Teacher']
 
 //  colors = [ P. Blue ,  B. Blue ,  Yellow  ,  Red     ,  Purple]
 // let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
-let colors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']
+// '#DAF7A6', '#FF5733', FCD558
+let colors = ['#FEE38D ', '#FFC300', '#E34523', '#C70039', '#900C3F', '#581845']
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)
@@ -45,6 +46,7 @@ horarios.forEach((horario, indexHor) => {
 
     let div = document.createElement('div')
     let divSched = document.createElement('div');
+    div.classList.add("SchedContainer");
 
     //create main table elements
     let caption = document.createElement('caption')
@@ -60,6 +62,7 @@ horarios.forEach((horario, indexHor) => {
 
     divSched.appendChild(tableSched)
     divSched.style.overflowX = "auto"
+    divSched.classList.add("Sched");
 
     div.appendChild(divSched)
 
@@ -104,14 +107,18 @@ horarios.forEach((horario, indexHor) => {
     })
 
     //header for table info
+    let divInfo = document.createElement('div');
     let tableInfo = document.createElement('table')
     let infoHead = document.createElement('thead')
     let infoBody = document.createElement('tbody')
 
     tableInfo.appendChild(infoHead)
     tableInfo.appendChild(infoBody)
+    divInfo.appendChild(tableInfo)
 
-    div.appendChild(tableInfo)
+    divInfo.style.overflowX = "auto"
+
+    div.appendChild(divInfo)
 
     info.forEach((i) =>{
         let th = document.createElement('th')
