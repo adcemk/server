@@ -27,10 +27,11 @@ _payload = {
 }
 
 materias = sys.argv[2].split(',')
-#materias = ['I5884', 'I7023', 'I5890', 'I7036']
+#materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
+#materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
 #generaciones = int(sys.argv[2])
 
-generaciones = 1000
+generaciones = 100
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
 
@@ -428,10 +429,19 @@ def convertToObjects(cursos_html):
                 tds = tabla.find_all('td')
                 hor = tds[1].text.split('-')
                 dia = tds[2].text.replace('.', '').strip()
-                
-                clase.dias.append(Dia(diasMap.index(dia),
-                                      horasDic[hor[0]],
-                                      horasDic[hor[1]]))     
+                dia = list(dia)
+
+                for d in dia:
+                    if d != ' ':
+                        print("dia ", d)
+                        print("horas ", hor)
+                        clase.dias.append(Dia(diasMap.index(d),
+                                            horasDic[hor[0]],
+                                            horasDic[hor[1]]))
+
+                #clase.dias.append(Dia(diasMap.index(dia),
+                #                      horasDic[hor[0]],
+                #                      horasDic[hor[1]]))     
                   
         else:
             tds = tabla_horas_dias[0].find_all('td')
@@ -451,6 +461,7 @@ def convertToObjects(cursos_html):
         clase.cupo = cupos
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
+        #for _ in range(5):
         #for _ in range(clase.cupos):
         clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
         cupos+=1
@@ -537,9 +548,7 @@ for i in range(generaciones):
             r1 = 0
             r2 = 1
             
-
-        print("r1 ", r1)
-        print("r2 ", r2)    
+ 
         a = ng[r1]
         b = ng[r2]
         ng.remove(a)
@@ -576,7 +585,12 @@ ng = ng[::-1]
 #buenos = buenos[::-1]
 # Devolver un arreglo de cadenas
 
-for i in range(len(ng)):
+# Los horarios que se van a mostrar
+mostrar = 10
+if(len(ng) < mostrar):
+    mostrar = len(ng)
+    
+for i in range(mostrar):
     #f.write(h.showString())     
     #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
     msg = {'type':'horario','body':ng[i].getJSON(),'key':i} 
