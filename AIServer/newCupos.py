@@ -12,8 +12,8 @@ first_url = 'http://consulta.siiau.udg.mx/wco/sspseca.forma_consulta'
 target_url = 'http://consulta.siiau.udg.mx/wco/sspseca.consulta_oferta'
 
 _payload = {
-    'ciclop':sys.argv[1],
-    #'ciclop':202110,
+    #'ciclop':sys.argv[1],
+    'ciclop':202110,
     'cup':'D',
     'crsep':None, # Clave de la materia
     'majrp':None,
@@ -26,12 +26,13 @@ _payload = {
     'mostrarp':2000
 }
 
-materias = sys.argv[2].split(',')
-#materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
+#materias = sys.argv[2].split(',')
+materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
+#materias = ['I5893', 'I5894', 'I6123'] # COMPU
 #materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
 #generaciones = int(sys.argv[2])
 
-generaciones = 100
+generaciones = 50
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
 
@@ -223,6 +224,7 @@ class Horario():
         self.fitness = 200
         self.clases = []
         self.clases_sinColition = []
+        self.numHorariosIguales = 1
         
     def clear(self):
         self.disponible = np.full((6,15), -1)
@@ -230,6 +232,10 @@ class Horario():
         self.clases = []
         self.clases_sinColition = []
         
+    def getDisponibleString(self):
+        m = self.disponible.reshape(-1)
+        return ' '.join([str(elem) for elem in m])
+    
     def colisionClases(self, clase1, clase2):
         matriz_auxiliar = np.full((6,15), -1)
         for dia in clase1.dias:
@@ -326,8 +332,12 @@ class Horario():
             print(string)
         print('')
         string = ''
+        arreglo = []
         for c in self.clases:
-            string += ('materia: %s nrc: %s cupo %d\n' %( c.materia, c.nrc, c.cupo))
+            arreglo.append(c.nrc)
+        arreglo.sort
+        for c in arreglo:
+            string += ('%s ' %(c))
         print(string)
         print('Fitness:', self.fitness)
     
@@ -379,6 +389,16 @@ class Horario():
 
         return data
 
+    def igualA(self, otro):
+        noClasesIguales = 0
+        noClasesSelf = len(self.clases)
+        for claseSelf in self.clases:
+            for claseOtro in otro.clases:
+                if(claseSelf.nrc == claseOtro.nrc):
+                    noClasesIguales += 1
+        if(noClasesIguales == noClasesSelf):
+            return True
+        return False
 
 def getCourses(materias):
     with requests.session() as s:
@@ -416,7 +436,7 @@ def convertToObjects(cursos_html):
     # Obtener solo los datos que nos interesan
     for curso in cursos_html:        
 
-        if int(curso('td')[6].text) <= 0:
+        if int(curso('td')[5].text) <= 0:
             continue
 
         clase = Clase()
@@ -433,8 +453,6 @@ def convertToObjects(cursos_html):
 
                 for d in dia:
                     if d != ' ':
-                        print("dia ", d)
-                        print("horas ", hor)
                         clase.dias.append(Dia(diasMap.index(d),
                                             horasDic[hor[0]],
                                             horasDic[hor[1]]))
@@ -457,14 +475,15 @@ def convertToObjects(cursos_html):
         clase.materia = curso('td')[1].text
         clase.materiaName = curso('td')[2].text 
         clase.nrc = curso('td')[0].text                                                        
-        clase.cupos = int(curso('td')[6].text)
+        clase.cupos = int(curso('td')[5].text)
         clase.cupo = cupos
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
+        # For que agrega cupos.
         #for _ in range(5):
-        #for _ in range(clase.cupos):
-        clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
-        cupos+=1
+        for _ in range(clase.cupos):
+            clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
+            cupos+=1
          
         
     # Un arreglo de 2 dimenciones donde estan los cupos separados por materias
@@ -494,7 +513,6 @@ def genera_aleatorio(_cupos, _curses):
                 cupos -= 1         
                                              
         horario.updateFitness()
-        horario.id = len(particulas)
         particulas.append(horario) 
         
     return particulas
@@ -585,32 +603,49 @@ ng = ng[::-1]
 #buenos = buenos[::-1]
 # Devolver un arreglo de cadenas
 
+# Repeticion de horarios
+noRepetidos = []
+
+for h in ng:
+    flag = False
+    for h2 in noRepetidos:
+        if(h.igualA(h2)):
+            flag = True
+            h2.numHorariosIguales += 1
+            break
+    if(flag == False):
+        noRepetidos.append(h)
+            
+
 # Los horarios que se van a mostrar
+"""
 mostrar = 10
 if(len(ng) < mostrar):
     mostrar = len(ng)
     
-for i in range(mostrar):
-    #f.write(h.showString())     
-    #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
+for i in range(len(ng)):
     msg = {'type':'horario','body':ng[i].getJSON(),'key':i} 
     sys.stdout.flush() 
-    print(json.dumps(msg))
-    #print(ng[i].fitness)
+    #print(json.dumps(msg))
+    print(ng[i].disponible)
     sys.stdout.flush()
     time.sleep(0.05)
- 
+"""
+print(len(noRepetidos))
+print(len(ng))
 
-#f.close()
-"""
-else:
-    for i in range(300):
-        #f.write(h.showString())     
-        #msg = {'type':'horario','body':buenos[i].showString(),'key':i}
-        msg = {'type':'horario','body':buenos[i].getJSON(),'key':i}
-        print(msg)
-        sys.stdout.flush()
-"""
+#IMPRIME LOS HORARIOS NO REPETIDOS
+print("NO REPETIDOS\n")
+for i in range(len(noRepetidos)):
+    msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
+    sys.stdout.flush() 
+    #print(json.dumps(msg))
+    noRepetidos[i].show()
+    print("Se repite ", noRepetidos[i].numHorariosIguales)
+    sys.stdout.flush()
+    time.sleep(0.05)
+
+
 msg = {'type':'status','body':'finished'}
 print(json.dumps(msg))
 sys.stdout.flush() 
