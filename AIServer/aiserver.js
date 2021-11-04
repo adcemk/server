@@ -1,12 +1,10 @@
+const PORT = process.env.PORT || 3001
 const express = require('express')
-const fs = require('fs')
 const {spawn} = require('child_process')
-const path = require('path')
 
 var expressWs = require('express-ws');
 var expressWs = expressWs(express());
 var app = expressWs.app;
-const port = 3001;
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({
@@ -49,8 +47,8 @@ app.get('/ai', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`AI Server app listening on port ${port}!`)
+app.listen(PORT, () => {
+    console.log(`AI Server app listening on port ${PORT}!`)
 })
 
 app.ws('/ai', (ws, req) => {

@@ -1,10 +1,10 @@
 var sendButton = document.getElementById('sendButton');
 
 sendButton.addEventListener('click', transfer);
-
-const tableURL = window.location.protocol + '//' + 'localhost:3000/table'
+const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
+const tableURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/table'
+const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com'
 var ciclo = ""
-var materias = []
 var materiasSend = []
 var json
 var socketGlobal
@@ -48,7 +48,8 @@ function transfer(e){
 
   //Websocket creation 
   var socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-  var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
+  //var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
+  const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com/ai'
   socket = new WebSocket(echoSocketUrl);
   //Delete add, delete and send buttons
   let send = document.getElementById("sendButton")
@@ -100,6 +101,7 @@ function transfer(e){
 
   socket.onopen = e => {
     //On send info to AI Server
+    var materias = []
     ciclo = document.getElementById("ciclo").value
     elements = document.getElementsByClassName("arrayClass")
     for (let index = 0; index < elements.length; index++) {
