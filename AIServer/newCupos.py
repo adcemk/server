@@ -12,8 +12,8 @@ first_url = 'http://consulta.siiau.udg.mx/wco/sspseca.forma_consulta'
 target_url = 'http://consulta.siiau.udg.mx/wco/sspseca.consulta_oferta'
 
 _payload = {
-    #'ciclop':sys.argv[1],
-    'ciclop':202110,
+    'ciclop':sys.argv[1],
+    #'ciclop':202110,
     'cup':'D',
     'crsep':None, # Clave de la materia
     'majrp':None,
@@ -26,13 +26,13 @@ _payload = {
     'mostrarp':2000
 }
 
-#materias = sys.argv[2].split(',')
-materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
+materias = sys.argv[2].split(',')
+#materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
 #materias = ['I5893', 'I5894', 'I6123'] # COMPU
 #materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
 #generaciones = int(sys.argv[2])
 
-generaciones = 50
+generaciones = 100
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
 
@@ -280,8 +280,8 @@ class Horario():
                         self.disponible[dia.dia][x] = materias.index(clase.materia)
 
         
-        self.fitness -= (len(materias) - len(self.clases)) * (40) # Castigo que falten materias
-
+        #self.fitness -= (len(materias) - len(self.clases)) // (200) # Castigo que falten materias
+        self.fitness -= (200 // len(materias)) * (len(materias) - len(self.clases))
 
         #
         hI = 100
@@ -436,7 +436,7 @@ def convertToObjects(cursos_html):
     # Obtener solo los datos que nos interesan
     for curso in cursos_html:        
 
-        if int(curso('td')[5].text) <= 0:
+        if int(curso('td')[6].text) <= 0:
             continue
 
         clase = Clase()
@@ -475,13 +475,14 @@ def convertToObjects(cursos_html):
         clase.materia = curso('td')[1].text
         clase.materiaName = curso('td')[2].text 
         clase.nrc = curso('td')[0].text                                                        
-        clase.cupos = int(curso('td')[5].text)
+        clase.cupos = int(curso('td')[6].text)
         clase.cupo = cupos
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
         # For que agrega cupos.
         #for _ in range(5):
-        for _ in range(clase.cupos):
+        for _ in range(3):
+            #for _ in range(clase.cupos):
             clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
             cupos+=1
          
@@ -574,8 +575,7 @@ for i in range(generaciones):
         
         # Recombinacion        
         res1, res2 = recombina(a, b)
-        
-        
+              
         #mutacion
         if(random.randint(0, 999999) == 250):
             victima = 0
@@ -597,7 +597,7 @@ for i in range(generaciones):
     ng = hijos
     ng.sort(key=lambda x: x.fitness)
 
-ng = ng[::-1]
+
 #buenos = []
 #buenos.sort(key=lambda x: x.fitness)
 #buenos = buenos[::-1]
@@ -615,7 +615,9 @@ for h in ng:
             break
     if(flag == False):
         noRepetidos.append(h)
-            
+
+noRepetidos.sort(key=lambda x: x.fitness)
+noRepetidos = noRepetidos[::-1]        
 
 # Los horarios que se van a mostrar
 """
@@ -631,19 +633,16 @@ for i in range(len(ng)):
     sys.stdout.flush()
     time.sleep(0.05)
 """
-print(len(noRepetidos))
-print(len(ng))
 
-#IMPRIME LOS HORARIOS NO REPETIDOS
-print("NO REPETIDOS\n")
+# IMPRIME LOS HORARIOS NO REPETIDOS
+# Los horarios que se repiten se muestran solo una vez
 for i in range(len(noRepetidos)):
-    msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
-    sys.stdout.flush() 
-    #print(json.dumps(msg))
-    noRepetidos[i].show()
-    print("Se repite ", noRepetidos[i].numHorariosIguales)
-    sys.stdout.flush()
-    time.sleep(0.05)
+    if(noRepetidos[i].fitness > 150):
+        msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
+        sys.stdout.flush() 
+        print(json.dumps(msg))
+        sys.stdout.flush()
+        time.sleep(0.05)
 
 
 msg = {'type':'status','body':'finished'}
