@@ -634,16 +634,22 @@ for i in range(len(ng)):
 #print(len(noRepetidos))
 #print(len(ng))
 
+if(len(noRepetidos) == 0):
+    msg = {'type':'empty', 'body':'0'}
+    sys.stdout.flush() 
+    print(json.dumps(msg))
+
 #IMPRIME LOS HORARIOS NO REPETIDOS
 #print("NO REPETIDOS\n")
 for i in range(len(noRepetidos)):
-    msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
-    sys.stdout.flush() 
-    print(json.dumps(msg))
-    #noRepetidos[i].show()
-    #print("Se repite ", noRepetidos[i].numHorariosIguales)
-    sys.stdout.flush()
-    time.sleep(0.05)
+    if(noRepetidos[i].fitness > 150):
+        msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
+        sys.stdout.flush() 
+        print(json.dumps(msg))
+        #noRepetidos[i].show()
+        #print("Se repite ", noRepetidos[i].numHorariosIguales)
+        sys.stdout.flush()
+        time.sleep(0.05)
 
 
 msg = {'type':'status','body':'finished'}

@@ -101,6 +101,9 @@ function transfer(e){
         percent.innerHTML = data['body'] + "%"
       }
     }  
+    else if(data['type'] == 'empty'){
+      
+    }
   } 
 
 

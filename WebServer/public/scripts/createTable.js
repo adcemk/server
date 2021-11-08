@@ -35,7 +35,7 @@ let info = ['Color', 'NRC', 'Code', 'Class', 'Teacher']
 //  colors = [ P. Blue ,  B. Blue ,  Yellow  ,  Red     ,  Purple]
 // let colors = ['#7289da', '#33ccff', '#ffff33', '#ff0000', '#cc00cc']
 // '#DAF7A6', '#FF5733', FCD558
-let colors = ['#FEE38D ', '#FFC300', '#E34523', '#C70039', '#900C3F', '#581845']
+let colors = ['#FEE38D ', '#FFC300', '#E34523', '#C70039', '#900C3F', '#581845', ' #39cd4b', ' #3942cd', ' #39cdc7', ' #f483da']
 
 var horariosString = sessionStorage.getItem('horarios')
 var horarios = JSON.parse(horariosString)

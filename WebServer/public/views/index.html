@@ -73,7 +73,7 @@
                         e.preventDefault();
                         var numberOfmaterias = $("#form1").find("input[name^='materia']").length;
                         console.log(numberOfmaterias);
-                        if (numberOfmaterias < 6){
+                        if (numberOfmaterias < 10){
                             var label = '<label for="[materia][' + numberOfmaterias + ']">Materia:'  + '</label> ';
                             var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" class="arrayClass" placeholder="Ingrese una Clave" maxlength="5"/>';
                             var removeButton = '<button class="remove-materia">Remover</button>';
