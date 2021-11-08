@@ -12,8 +12,8 @@ first_url = 'http://consulta.siiau.udg.mx/wco/sspseca.forma_consulta'
 target_url = 'http://consulta.siiau.udg.mx/wco/sspseca.consulta_oferta'
 
 _payload = {
-    #'ciclop':sys.argv[1],
-    'ciclop':202110,
+    'ciclop':sys.argv[1],
+    #'ciclop':202110,
     'cup':'D',
     'crsep':None, # Clave de la materia
     'majrp':None,
@@ -26,13 +26,13 @@ _payload = {
     'mostrarp':2000
 }
 
-#materias = sys.argv[2].split(',')
-materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
+materias = sys.argv[2].split(',')
+#materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
 #materias = ['I5893', 'I5894', 'I6123'] # COMPU
 #materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
 #generaciones = int(sys.argv[2])
 
-generaciones = 50
+generaciones = 100
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
 
@@ -480,8 +480,8 @@ def convertToObjects(cursos_html):
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
         # For que agrega cupos.
-        #for _ in range(5):
-        for _ in range(clase.cupos):
+        for _ in range(5):
+        #for _ in range(clase.cupos):
             clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
             cupos+=1
          
@@ -631,17 +631,17 @@ for i in range(len(ng)):
     sys.stdout.flush()
     time.sleep(0.05)
 """
-print(len(noRepetidos))
-print(len(ng))
+#print(len(noRepetidos))
+#print(len(ng))
 
 #IMPRIME LOS HORARIOS NO REPETIDOS
-print("NO REPETIDOS\n")
+#print("NO REPETIDOS\n")
 for i in range(len(noRepetidos)):
     msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
     sys.stdout.flush() 
-    #print(json.dumps(msg))
-    noRepetidos[i].show()
-    print("Se repite ", noRepetidos[i].numHorariosIguales)
+    print(json.dumps(msg))
+    #noRepetidos[i].show()
+    #print("Se repite ", noRepetidos[i].numHorariosIguales)
     sys.stdout.flush()
     time.sleep(0.05)
 

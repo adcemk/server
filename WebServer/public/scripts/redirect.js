@@ -1,5 +1,7 @@
-const formURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/'
-const instructionsURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/instructions'
+//const formURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/'
+//const instructionsURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/instructions'
+const formURL = window.location.protocol + '//' + 'localhost:3000/'
+const instructionsURL = window.location.protocol + '//' + 'localhost:3000/instructions'
 
 var instructions = document.getElementById('instrucciones')
 var form = document.getElementById('formulario')

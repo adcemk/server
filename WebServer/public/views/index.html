@@ -19,30 +19,54 @@
         </div>
     </div>
     <div class="container" id="container">
-        <!-- <div class="header">
-            <h1>Formulario</h1>
-        </div> -->
+        <!-- Ciclo -->
         <form id="form1" action="/request" method="POST">
             <label for="ciclo">Ciclo Escolar:</label>
-            <input type="text" id="ciclo" name="ciclo" required><br>
+            <input type="text" id="ciclo" name="ciclo" maxlength="6" placeholder="Ingrese un Ciclo Escolar" required>
+            <!-- Ciclo Info -->
+            <button id="cicloInfo" class="info" type="button">i</button>
+            <div id="cicloModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span id="cicloModalClose" class="close">&times;</span>
+                        <h2>Información</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>Ingresa el año del semestre que estes cursando y el ciclo (este suele ser 10 o 20).</p>
+                        <p>Por ejemplo <strong>202120</strong>.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Materia -->
             <div class="materia">
                 <label for="materia[0]">Materia:</label>
-                <input type="text" id="materia[0]" name="materia[0]" class="arrayClass" placeholder="Clave">
+                <input type="text" id="materia[0]" name="materia[0]" class="arrayClass" placeholder="Ingrese una Clave" maxlength="5">
+                <!-- Materia Info -->
+                <button id="materiaInfo" class="info" type="button">i</button>
+                <div id="materiaModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="materiaModalClose" class="close">&times;</span>
+                            <h2>Informacíon</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>Ingresa una clave para la materia que desees, estas se encuentran en la malla curricular.</p> 
+                            <p>Suele tener formato similar al siguiente ejemplo: <strong>I5893</strong></p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="addContainer" id="addContainer">
-                <input type="button" id="add" value="Add New"><br> 
+                <input type="button" id="add" value="Agregar Materia"><br> 
             </div>
-            <!-- <button onclick="addCourse()">Add</button> -->
-            <button type="button" id="sendButton">Get Schedules</button>
-            <!-- <button type="submit" id="sendButton">Get Schedules</button> -->
+            <button type="button" id="sendButton">Conseguir Horarios</button>
 
             <ol id="list_item"></ol>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <!-- <script src="../scripts/addCourse.js"></script>
-            <script src="../scripts/removeCourse.js"></script> -->
             <script src="../scripts/submit.js"></script>
             <script src="../scripts/redirect.js"></script>
+            <script src="../scripts/infoModals.js"></script>
             <script>
                 $(document).ready(function(){
                     $("#add").click(function(e){
@@ -50,10 +74,9 @@
                         var numberOfmaterias = $("#form1").find("input[name^='materia']").length;
                         console.log(numberOfmaterias);
                         if (numberOfmaterias < 6){
-                            // var label = '<label for="[materia][' + numberOfmaterias + ']">Materia ' + (numberOfmaterias + 1) + '</label> ';
                             var label = '<label for="[materia][' + numberOfmaterias + ']">Materia:'  + '</label> ';
-                            var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" class="arrayClass" placeholder="Clave"/>';
-                            var removeButton = '<button class="remove-materia">Remove</button>';
+                            var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" class="arrayClass" placeholder="Ingrese una Clave" maxlength="5"/>';
+                            var removeButton = '<button class="remove-materia">Remover</button>';
                             var html = "<div class='materia'>" + label + input + removeButton + "</div>";
                             // var contain = '<div class="flex-container">' + html + '</div>';
                             $("#form1").find("#add").before(html);
@@ -76,10 +99,6 @@
                 $(document).on("click", ".remove-materia",function(e){
                     e.preventDefault();
                     $(this).parents(".materia").remove();
-                    //update labels
-                    // $("#form1").find("label[for^='materia']").each(function(){
-                    //     $(this).html("Materia " + ($(this).parents('.materia').index() + 1));
-                    // });
                 });
             </script>
           </form>

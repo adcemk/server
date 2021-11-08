@@ -1,10 +1,11 @@
-const PORT = process.env.PORT || 3001
 const express = require('express')
 const {spawn} = require('child_process')
 
 var expressWs = require('express-ws');
 var expressWs = expressWs(express());
 var app = expressWs.app;
+//const PORT = process.env.PORT || 3001
+const PORT = 3001;
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({

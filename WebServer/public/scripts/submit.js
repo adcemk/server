@@ -2,22 +2,26 @@ var sendButton = document.getElementById('sendButton');
 
 sendButton.addEventListener('click', transfer);
 const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-const tableURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/table'
-const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com'
+//const tableURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/table'
+const tableURL = window.location.protocol + '//' + 'localhost:3000/table'
+//const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com'
 var ciclo = ""
 var materiasSend = []
 var json
 var socketGlobal
+const regexCiclo = new RegExp('([0-9]{6})|([0-9]{4}[A-Z])');
+const regexMateria = new RegExp('([A-Z][0-9]{4})|([A-Z]{2}[0-9]{3})');
 
 function transfer(e){
-  // Check for empty inputs
+  // Check for empty inputs or incorrect inputs
   var flag = false;
-
-  if(!document.getElementById("ciclo").value){
+  //check for empty cicle
+  var validCiclo = regexCiclo.test(document.getElementById("ciclo").value)
+  if(!document.getElementById("ciclo").value || !validCiclo){
     var alert = document.getElementById('alertCiclo')
     if(alert === null){
       var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
-      var message = 'Ingresa un ciclo.';
+      var message = 'El campo <strong>Ciclo</strong> está vacío o tiene formato erroneo.';
       var alert = '<div class="alert" id="alertCiclo">' + span + message + '</div>';
       $("#form1").find("#sendButton").after(alert);
     }
@@ -26,14 +30,15 @@ function transfer(e){
     }
     flag=true;
   }
-
+  //check for empty classes
   let checkEmptyClass = document.getElementsByClassName("arrayClass")
   for (let index = 0; index < checkEmptyClass.length; index++) {
-    if(!checkEmptyClass[index].value){
+    var validMateria = regexMateria.test(checkEmptyClass[index].value)
+    if(!checkEmptyClass[index].value || !validMateria){
       var alert = document.getElementById('alertClass')
       if(alert === null){
         var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
-        var message = 'Debes llenar todos los campos de <strong>Materia</strong>.';
+        var message = 'Los campos <strong>Materia</strong> están vacíos o tiene formato erroneo.';
         var alert = '<div class="alert" id="alertClass">' + span + message + '</div>';
         $("#form1").find("#sendButton").after(alert);
       }
@@ -43,13 +48,13 @@ function transfer(e){
       flag=true;
     }
   }
-
+  //return if empty or incorrect inputs
   if(flag === true){return}
 
   //Websocket creation 
   var socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-  //var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
-  const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com/ai'
+  var echoSocketUrl = socketProtocol + '//' + 'localhost:3001' + `/ai`
+  //const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com/ai'
   socket = new WebSocket(echoSocketUrl);
   //Delete add, delete and send buttons
   let send = document.getElementById("sendButton")
