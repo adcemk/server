@@ -580,22 +580,6 @@ for i in range(generaciones):
         # Recombinacion        
         res1, res2 = recombina(a, b)
         
-        
-        #mutacion
-        if(random.randint(0, 999999) == 250):
-            victima = 0
-            for i in range(len(ng)-1):
-                if(len(ng) > 0):
-                    if(ng[i].fitness > 1):
-                        victima = i
-                        break
-                
-            victima_horario = ng[victima]
-            ng.remove(victima_horario)
-            
-            recombinaMutacion(res1, res2, victima_horario)
-            hijos.append(victima_horario)
-        
         hijos.append(res1)
         hijos.append(res2)  
     
