@@ -522,6 +522,11 @@ def genera_aleatorio(_cupos, _curses):
 cursos, cupos = convertToObjects(getCourses(materias)) # Arreglo bidimencional de clases y contador global de clases
 ng = genera_aleatorio(cupos, cursos) # Primera generacion de horarios
 poblacion = len(ng) # Numero de horarios de la primera generacion
+emptyFlag = 0
+
+if(len(ng) == 0):
+    emptyFlag=1
+    generaciones=0
 
 # Algoritmo genetico
 
@@ -634,11 +639,6 @@ for i in range(len(ng)):
 #print(len(noRepetidos))
 #print(len(ng))
 
-if(len(noRepetidos) == 0):
-    msg = {'type':'empty', 'body':'0'}
-    sys.stdout.flush() 
-    print(json.dumps(msg))
-
 #IMPRIME LOS HORARIOS NO REPETIDOS
 #print("NO REPETIDOS\n")
 for i in range(len(noRepetidos)):
@@ -652,7 +652,7 @@ for i in range(len(noRepetidos)):
         time.sleep(0.05)
 
 
-msg = {'type':'status','body':'finished'}
+msg = {'type':'status','body':'finished', 'empty':emptyFlag}
 print(json.dumps(msg))
 sys.stdout.flush() 
 

@@ -4,6 +4,7 @@ sendButton.addEventListener('click', transfer);
 const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
 //const tableURL = window.location.protocol + '//' + 'web-server-amaury.herokuapp.com/table'
 const tableURL = window.location.protocol + '//' + 'localhost:3000/table'
+const noTableURL = window.location.protocol + '//' + 'localhost:3000/noTable'
 //const echoSocketUrl = socketProtocol + '//' + 'ia-server-amaury.herokuapp.com'
 var ciclo = ""
 var materiasSend = []
@@ -21,7 +22,7 @@ function transfer(e){
     var alert = document.getElementById('alertCiclo')
     if(alert === null){
       var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
-      var message = 'El campo <strong>Ciclo</strong> está vacío o tiene formato erroneo.';
+      var message = 'El campo <strong>Ciclo</strong> está vacío o tiene formato invalido.';
       var alert = '<div class="alert" id="alertCiclo">' + span + message + '</div>';
       $("#form1").find("#sendButton").after(alert);
     }
@@ -33,16 +34,35 @@ function transfer(e){
   //check for empty classes
   let checkEmptyClass = document.getElementsByClassName("arrayClass")
   for (let index = 0; index < checkEmptyClass.length; index++) {
+    for (let jindex = 0; jindex < checkEmptyClass.length; jindex++){
+      if(index != jindex){
+        if(checkEmptyClass[index].value == checkEmptyClass[jindex].value){
+          flag=true;
+          var alert = document.getElementById('alertClass')
+          var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
+          var message = 'No se pueden repetir <strong>Claves</strong>.';
+          if(alert === null){
+            var alert = '<div class="alert" id="alertClass">' + span + message + '</div>';
+            $("#form1").find("#sendButton").after(alert);
+          }
+          else {
+            document.getElementById('alertClass').innerHTML = span + message
+            alert.style.display = "block";
+          }
+        }
+      }
+    }
     var validMateria = regexMateria.test(checkEmptyClass[index].value)
     if(!checkEmptyClass[index].value || !validMateria){
       var alert = document.getElementById('alertClass')
+      var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
+      var message = 'Los campos <strong>Materia</strong> están vacíos o tiene formato invalido.';
       if(alert === null){
-        var span = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> ';
-        var message = 'Los campos <strong>Materia</strong> están vacíos o tiene formato erroneo.';
         var alert = '<div class="alert" id="alertClass">' + span + message + '</div>';
         $("#form1").find("#sendButton").after(alert);
       }
       else {
+        document.getElementById('alertClass').innerHTML = span + message
         alert.style.display = "block";
       }
       flag=true;
@@ -71,7 +91,7 @@ function transfer(e){
   let title = document.createElement("h2")
   let percent = document.createElement("h3")
   div.classList.add("percentage")
-  title.innerHTML = "Generación de Horarios:"
+  title.innerHTML = "Recolectando Información..."
   div.appendChild(title)
   div.appendChild(percent)
   document.getElementById('container').appendChild(div)
@@ -90,19 +110,27 @@ function transfer(e){
     else if(data['type'] == 'status') {
       console.log('status', data)
       //Finished
-      if(data['body'] == 'finished'){
+      if(data['empty']){
+        socket.close()
+        console.log("entered empty flag")
+        window.location.assign(noTableURL)
+      }
+      else if(data['body'] == 'finished'){
         socket.close()
         console.log('entered finished flag')
         sessionStorage.setItem('horarios', JSON.stringify(materiasSend))
-        window.location.replace(tableURL)
+        window.location.assign(tableURL)
       }
       //Generation Info
       else{
+        title.innerHTML = "Generando Horarios:"
         percent.innerHTML = data['body'] + "%"
+        console.log(data['body'])
+        if(data['body'] == 100){
+          title.innerHTML = "Generando tablas..."
+          percent.remove()
+        }
       }
-    }  
-    else if(data['type'] == 'empty'){
-      
     }
   } 
 
@@ -123,7 +151,6 @@ function transfer(e){
         "ciclo":ciclo,
         "materias":materias
     };
-
     console.log(json)
 
     socket.send(JSON.stringify(json))

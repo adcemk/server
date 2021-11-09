@@ -19,6 +19,10 @@ app.get('/table', (req, res) => {
   res.sendFile(path.join(__dirname, '/public/views/table.html'))
 })
 
+app.get('/noTable', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/views/noTable.html'))
+})
+
 app.use(express.urlencoded());
 app.use(express.json());
 
