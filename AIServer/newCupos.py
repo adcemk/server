@@ -563,9 +563,10 @@ for i in range(generaciones):
             r1 = seleccion(ng) # Escoger en base a a el fitness con ruleta
             r2 = r1 
             while r1 == r2:
-                #r2 = seleccion(ng)
-                #if(random.randint(0, 1)):
-                r2 = random.randint(0, (len(ng)-1))
+                r2 = seleccion(ng)
+                if(random.randint(0, 100) < 1):
+                    print("entered mutation")
+                    r2 = random.randint(0, (len(ng)-1))
         
         if(r1 == None or r2 == None):
             r1 = 0
