@@ -30,7 +30,6 @@ materias = sys.argv[2].split(',')
 #materias = ['I5893', 'I5894', 'I5892', 'I7022', 'I6123'] # COMPU
 #materias = ['I5893', 'I5894', 'I6123'] # COMPU
 #materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
-#generaciones = int(sys.argv[2])
 
 generaciones = 100
 
@@ -74,51 +73,6 @@ horasMap = ['0700','0800','0900','1000','1100',
             '1200','1300','1400','1500','1600',
             '1700','1800','1900','2000','2100'] 
 
-def recombinaMutacion(h1, h2, h3):
-    cupos = []
-    flags = [False for i in range(len(materias))]
-    for c in h1.clases:
-        cupos.append(c)
-    for c in h2.clases:
-        cupos.append(c)
-    for c in h3.clases:
-        cupos.append(c)
-        
-    random.shuffle(cupos)
-    
-    h1.clases = []
-    h2.clases = []
-    h3.clases = []
-    
-    if(len(cupos) != 0):
-        for i in range(len(materias)):
-            if flags[materias.index(cupos[len(cupos)-1].materia)] == False:
-                flags[materias.index(cupos[len(cupos)-1].materia)] = True
-                h1.clases.append(cupos.pop())
-                if(len(cupos) == 0):
-                    break
-            
-    if(len(cupos) != 0):
-        flags = [False for i in range(len(materias))]         
-        for i in range(len(materias)):
-            if flags[materias.index(cupos[len(cupos)-1].materia)] == False:
-                flags[materias.index(cupos[len(cupos)-1].materia)] = True
-                h1.clases.append(cupos.pop())
-                if(len(cupos) == 0):
-                    break 
-                
-    if(len(cupos) != 0):
-        flags = [False for i in range(len(materias))]
-        for i in range(len(materias)):
-            if flags[materias.index(cupos[len(cupos)-1].materia)] == False:
-                flags[materias.index(cupos[len(cupos)-1].materia)] = True
-                h1.clases.append(cupos.pop())
-                if(len(cupos) == 0):
-                    break
-    
-    h1.updateFitness()
-    h2.updateFitness()
-    h3.updateFitness()
 
 def recombina(horario1, horario2):
     
@@ -180,12 +134,6 @@ class Dia:
         self.dia = dia
         self.horaI = horaI
         self.horaF = horaF
-        
-    def toString(self):
-        return ('%s_%s-%s' % (diasMap[self.dia], horasMap[self.horaI], horasMap[self.horaF]))
-    
-    def toStringChromosoma(self):
-        return ('%d_%d-%d' % (self.dia, self.horaI, self.horaF))   
 
 class Clase:
     def __init__(self, nrc=None, cupos=-1, materia=''):
@@ -196,26 +144,6 @@ class Clase:
         self.nrc = nrc
         self.cupo = None
         self.dias = []                  
-    
-    def diasToString(self):
-        string = ''
-        for dia in self.dias:
-            string += '_'
-            string += dia.toString()
-        return string
-    
-    def diasToStringChromosoma(self):
-        string = ''
-        for dia in self.dias:
-            string += '_'
-            string += dia.toStringChromosoma()
-        return string
-    
-    def show(self):
-        print('Materia_%s_nrc_%s_cupos_%d%s' % (self.materiaName, self.nrc, self.cupos, self.diasToString()))
-        
-    def showChromosoma(self):
-        print('Materia_%s_nrc_%s_cupos_%d%s' % (materias.index(self.materia), self.nrc, self.cupos, self.diasToStringChromosoma()))
     
 class Horario():
     def __init__(self):
@@ -320,47 +248,6 @@ class Horario():
         if self.fitness < 0:
             self.fitness = 1
     
-    def show(self):
-        print(' |07|08|09|10|11|12|13|14|15|16|17|18|19|20|21')
-        for i in range(6):
-            string = str(diasMap[i]) + '|'
-            for j in range(15):
-                if(self.disponible[i][j] == -1):
-                    string += '  |'
-                else:
-                    string += str(self.disponible[i][j]) + ' |'
-            print(string)
-        print('')
-        string = ''
-        arreglo = []
-        for c in self.clases:
-            arreglo.append(c.nrc)
-        arreglo.sort
-        for c in arreglo:
-            string += ('%s ' %(c))
-        print(string)
-        print('Fitness:', self.fitness)
-    
-    def showString(self):
-        string = '\n'
-        string += ('_|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21\n')
-        for i in range(6):
-            string += str(diasMap[i]) + '|'
-            for j in range(15):
-                if(self.disponible[i][j] == -1):
-                    string += '__|'
-                else:
-                    string += str(self.disponible[i][j]) + '_|'
-            string += '\n\n'
-        #string += ('Fitness: %d\n\n' % self.fitness)
-        aux = ''
-        for i in range(len(self.clases)):
-            aux += self.clases[i].nrc + ' '
-            string += ('materia %d: \n\t %s(%s)\n nrc: %s\n profe: %s\n\n' %(i, self.clases[i].materiaName, self.clases[i].materia, self.clases[i].nrc, self.clases[i].profe))
-
-        string += 'nrcs ' + aux + '\n'
-
-        return string
 
     def getJSON(self):
 
@@ -532,17 +419,12 @@ if(len(ng) == 0):
 
 for i in range(generaciones):
     hijos = []
-    counter = 0
-      
-    for n in range(len(ng)):
-        if(len(ng[n].clases) == len(materias) and ng[n].fitness == 200):
-            counter += 1
    
     msg = {'type':'status','body':i+1}
     sys.stdout.flush() 
     print(json.dumps(msg))   
     sys.stdout.flush()
-    #print(i)
+
     for j in range(0, poblacion, 2):
         
         if (len(ng) == 0):
@@ -565,14 +447,12 @@ for i in range(generaciones):
             while r1 == r2:
                 r2 = seleccion(ng)
                 if(random.randint(0, 100) < 1):
-                    print("entered mutation")
                     r2 = random.randint(0, (len(ng)-1))
         
         if(r1 == None or r2 == None):
             r1 = 0
             r2 = 1
             
- 
         a = ng[r1]
         b = ng[r2]
         ng.remove(a)
@@ -588,10 +468,6 @@ for i in range(generaciones):
     ng.sort(key=lambda x: x.fitness)
 
 ng = ng[::-1]
-#buenos = []
-#buenos.sort(key=lambda x: x.fitness)
-#buenos = buenos[::-1]
-# Devolver un arreglo de cadenas
 
 # Repeticion de horarios
 noRepetidos = []
@@ -607,35 +483,18 @@ for h in ng:
         noRepetidos.append(h)
             
 
-# Los horarios que se van a mostrar
-"""
-mostrar = 10
-if(len(ng) < mostrar):
-    mostrar = len(ng)
-    
-for i in range(len(ng)):
-    msg = {'type':'horario','body':ng[i].getJSON(),'key':i} 
-    sys.stdout.flush() 
-    #print(json.dumps(msg))
-    print(ng[i].disponible)
-    sys.stdout.flush()
-    time.sleep(0.05)
-"""
-#print(len(noRepetidos))
-#print(len(ng))
+length = len(noRepetidos)
 
-#IMPRIME LOS HORARIOS NO REPETIDOS
-#print("NO REPETIDOS\n")
-for i in range(len(noRepetidos)):
+if(length > 10):
+    length = 10
+
+for i in range(length):
     if(noRepetidos[i].fitness > 150):
         msg = {'type':'horario','body':noRepetidos[i].getJSON(),'key':i} 
         sys.stdout.flush() 
         print(json.dumps(msg))
-        #noRepetidos[i].show()
-        #print("Se repite ", noRepetidos[i].numHorariosIguales)
         sys.stdout.flush()
         time.sleep(0.05)
-
 
 msg = {'type':'status','body':'finished', 'empty':emptyFlag}
 print(json.dumps(msg))
