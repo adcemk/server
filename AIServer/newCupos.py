@@ -31,6 +31,8 @@ materias = sys.argv[2].split(',')
 #materias = ['I5893', 'I5894', 'I6123'] # COMPU
 #materias = ['I6176', 'I6154', 'I6175', 'I6170', 'I6166'] # QFB
 
+combinationsScalar = int(sys.argv[3])
+
 generaciones = 100
 
 diasMap = ['L', 'M', 'I', 'J', 'V', 'S']
@@ -367,7 +369,7 @@ def convertToObjects(cursos_html):
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
         # For que agrega cupos.
-        for _ in range(5):
+        for _ in range(combinationsScalar):
         #for _ in range(clase.cupos):
             clases[materias.index(clase.materia)].append(copy.deepcopy(clase))
             cupos+=1

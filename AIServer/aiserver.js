@@ -62,7 +62,7 @@ app.ws('/ai', (ws, req) => {
         }catch{console.log('error in', msg)}
 
         if(data['type'] == 'request') {
-            const python = spawn('python', ['newCupos.py', data.ciclo, data.materias]);
+            const python = spawn('python', ['newCupos.py', data.ciclo, data.materias, data.velocidad]);
            
             python.stdout.on('data', (data) => {
                 ws.send(data.toString())

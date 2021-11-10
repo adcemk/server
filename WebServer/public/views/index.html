@@ -19,9 +19,35 @@
         </div>
     </div>
     <div class="container" id="container">
-        <!-- Ciclo -->
         <form id="form1" action="/request" method="POST">
-            <label for="ciclo">Ciclo Escolar:</label>
+            <!-- Velocidad -->
+            <div class="velocidad">
+                <label class="label">Velocidad:</label>
+                <label class="radioContainer">Lento
+                    <input type="radio" name="speed" value="5" checked>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="radioContainer">Rápido
+                    <input type="radio" name="speed" value="1">
+                    <span class="checkmark"></span>
+                </label>
+                <!-- Velocidad Info -->
+                <button id="speedInfo" class="info" type="button">i</button>
+                <div id="speedModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="speedModalClose" class="close">&times;</span>
+                            <h2>Información - Velocidad</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>Lento realiza el proceso de manera lenta pero con mejores resultados.</p>
+                            <p>Rápido realiza el proceso de manera rápido con peores resultados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Ciclo -->
+            <label for="ciclo" class="label">Ciclo Escolar:</label>
             <input type="text" id="ciclo" name="ciclo" maxlength="6" placeholder="Ingrese un Ciclo Escolar" required>
             <!-- Ciclo Info -->
             <button id="cicloInfo" class="info" type="button">i</button>
@@ -29,7 +55,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <span id="cicloModalClose" class="close">&times;</span>
-                        <h2>Información</h2>
+                        <h2>Información - Ciclo</h2>
                     </div>
                     <div class="modal-body">
                         <p>Ingresa el año del semestre que estes cursando y el ciclo (este suele ser 10 o 20).</p>
@@ -39,7 +65,7 @@
             </div>
             <!-- Materia -->
             <div class="materia">
-                <label for="materia[0]">Materia:</label>
+                <label for="materia[0]" class="label">Materia:</label>
                 <input type="text" id="materia[0]" name="materia[0]" class="arrayClass" placeholder="Ingrese una Clave" maxlength="5">
                 <!-- Materia Info -->
                 <button id="materiaInfo" class="info" type="button">i</button>
@@ -47,7 +73,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <span id="materiaModalClose" class="close">&times;</span>
-                            <h2>Informacíon</h2>
+                            <h2>Informacíon - Materia</h2>
                         </div>
                         <div class="modal-body">
                             <p>Ingresa una clave para la materia que desees, estas se encuentran en la malla curricular.</p> 
@@ -74,7 +100,7 @@
                         var numberOfmaterias = $("#form1").find("input[name^='materia']").length;
                         console.log(numberOfmaterias);
                         if (numberOfmaterias < 10){
-                            var label = '<label for="[materia][' + numberOfmaterias + ']">Materia:'  + '</label> ';
+                            var label = '<label class="label" for="[materia][' + numberOfmaterias + ']">Materia:'  + '</label> ';
                             var input = '<input type="text" name="materia[' + numberOfmaterias + ']" id="materia[' + numberOfmaterias + ']" class="arrayClass" placeholder="Ingrese una Clave" maxlength="5"/>';
                             var removeButton = '<button class="remove-materia">Remover</button>';
                             var html = "<div class='materia'>" + label + input + removeButton + "</div>";
@@ -101,7 +127,7 @@
                     $(this).parents(".materia").remove();
                 });
             </script>
-          </form>
+        </form>
     </div>
 </body>
 </html>

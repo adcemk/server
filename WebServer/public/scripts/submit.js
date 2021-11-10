@@ -125,7 +125,6 @@ function transfer(e){
       else{
         title.innerHTML = "Generando Horarios:"
         percent.innerHTML = data['body'] + "%"
-        console.log(data['body'])
         if(data['body'] == 100){
           title.innerHTML = "Generando tablas..."
           percent.remove()
@@ -139,23 +138,21 @@ function transfer(e){
     //On send info to AI Server
     var materias = []
     ciclo = document.getElementById("ciclo").value
+    var speed = $('input[name="speed"]:checked').val();
     elements = document.getElementsByClassName("arrayClass")
     for (let index = 0; index < elements.length; index++) {
-      //console.log(elements[index].value)
       materias.push(elements[index].value)
     }
-    // console.log("ciclo en submit.js: ",ciclo)
-    // console.log("mateias en submit.js: ",materias)
     json = {
         'type':'request',
         "ciclo":ciclo,
-        "materias":materias
+        "materias":materias,
+        "velocidad":speed
     };
     console.log(json)
 
     socket.send(JSON.stringify(json))
   }
 
-  socketGlobal = socket
-  //$('#message').show();     
+  socketGlobal = socket    
 }
