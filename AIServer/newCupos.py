@@ -325,7 +325,7 @@ def convertToObjects(cursos_html):
     # Obtener solo los datos que nos interesan
     for curso in cursos_html:        
 
-        if int(curso('td')[5].text) <= 0:
+        if int(curso('td')[6].text) <= 0:
             continue
 
         clase = Clase()
@@ -364,7 +364,7 @@ def convertToObjects(cursos_html):
         clase.materia = curso('td')[1].text
         clase.materiaName = curso('td')[2].text 
         clase.nrc = curso('td')[0].text                                                        
-        clase.cupos = int(curso('td')[5].text)
+        clase.cupos = int(curso('td')[6].text)
         clase.cupo = cupos
         clase.profe = curso.find_all("td", class_="tdprofesor")[1].text
         
